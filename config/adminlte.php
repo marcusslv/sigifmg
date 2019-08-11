@@ -115,11 +115,9 @@ return [
             'can'  => 'manage-blog',
         ],
         [
-            'text'        => 'Pages',
-            'url'         => 'admin/pages',
-            'icon'        => 'file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'text'        => 'Usuários',
+            'url'         => 'admin/user',
+            'icon'        => 'users',
         ],
         'ACCOUNT SETTINGS',
         [

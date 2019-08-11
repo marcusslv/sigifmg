@@ -19,13 +19,13 @@ Auth::routes();
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth'], 'prefix'=> 'admin', 'as' =>'admin.'], function () {
     Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::get('/', ['as' => 'index', 'uses' => 'UserController@index']);
+        Route::get('getData', ['as' => 'getData', 'uses' => 'UserController@getData']);
         Route::get('edit/{id}', ['as' => 'edit', 'uses' => 'UserController@edit']);
         Route::post('store', ['as' => 'store', 'uses' => 'UserController@store']);
         Route::post('update', ['as' => 'update', 'uses' => 'UserController@update']);
-        Route::delete('destroy/{id}', ['as' => 'destroy', 'uses' => 'UserController@destroy']);
+        Route::get('delete/{id}', ['as' => 'delete', 'uses' => 'UserController@destroy']);
     });
 });
-
