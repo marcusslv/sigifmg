@@ -16,9 +16,9 @@
         <div class="box-header">
           <h3 class="box-title">Lista de Usuários</h3>
           <div class="pull-right">
-            <button type="button" class="btn btn-success btn-flat" data-toggle="modal" data-target="#create-modal">
-                Adicionar novo usuário
-            </button>
+          <a href="{{route('admin.user.create')}}" class="btn btn-success btn-flat">
+             Adicionar novo usuário
+          </a>
           </div>
         </div>
         <!-- /.box-header -->
@@ -40,9 +40,9 @@
       </div>
     </div>
 </div>
+
 @stop
-@include('user.create-modal')
-@include('user.edit-modal')
+
 
 @section('js')
 
@@ -51,7 +51,7 @@ var dataTable;
 
 $(function() {
       var status;
-      $('.select2').select2();
+
       dataTable  = $('#users').DataTable( {
       "processing" : true,
       "serverSide" : true,
@@ -71,7 +71,7 @@ $(function() {
           },
           { data: "action",       name: "action", orderable: false, 
           render: function (dados) {      
-            btn = '<button data-route= "'+dados.edit+'" class="btn btn-warning btn-flat edit-user" data-toggle="modal" data-target="#edit-modal"><i class = "fa fa-edit"></i></button> ';
+            btn = '<a href="'+dados.edit+'" class="btn btn-warning btn-flat edit-user"><i class = "fa fa-edit"></i></a> ';
             if (dados.status) {
                 return btn + '<button type = "button" data-route = "'+dados.delete+'" class = " btn btn-danger delete-user btn-flat"><i class="fa fa-user-times"></button>';
             } else {
@@ -103,42 +103,15 @@ $(function() {
       });
     });
 
-    $(document).on('click', '.edit-user', function (event) {
+    /*$(document).on('click', '.edit-user', function (event) {
       event.preventDefault();
       var route = $(this).attr('data-route');
       getDataUser(route);
-    });
-
-    $(document).on('submit', 'form#edit-user', function (event) {
-      event.preventDefault();
-      var data = $(this).serialize();
-      console.log(data);
-      
-      var route = $(this).attr('action');
-            
-      update(route, data);
-    });
+    });*/
 
 });
 
-function update(route, data) {
-  $.ajax({
-    type: "post",
-    url : route,
-    data: data,
-    dataType: 'json',
-    beforeSend: function(){
-      Swal.showLoading()
-    },
-    success: function(response){
-      if(response.status){
-
-      }
-    }
-  });  
-}
-
-function getDataUser(route) {
+/*function getDataUser(route) {
   $.ajax({
     type: "GET",
     url : route,
@@ -147,11 +120,12 @@ function getDataUser(route) {
       // Swal.showLoading()
     },
     success: function(response){
+      $("form#edit-user input#edit-id").val(response.id);
       $("form#edit-user input#name").val(response.name);
       $("form#edit-user input#email").val(response.email);
     }
   });  
-}
+}*/
 
 function destroy_user(route) {
   $.ajax({

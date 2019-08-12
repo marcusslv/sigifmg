@@ -31,6 +31,23 @@ class UserTest extends TestCase
     {
         $user = \factory('App\User')->create();
         $this->get(route('admin.user.index'))
-            ->assertStatus(302);           
+            ->assertStatus(302);
+    }
+
+    public function test_user_create()
+    {
+        $user = \factory('App\User')->create();
+        $this->actingAs($user);
+        $this->get(route('admin.user.create'))
+            ->assertStatus(200);
+    }
+
+    public function test_edit_user()
+    {
+        $user = \factory('App\User')->create();
+        $this->actingAs($user);
+        $this->post(route('admin.user.update'))
+            ->assertStatus(200)
+            ->assertViewIs('user.index');
     }
 }

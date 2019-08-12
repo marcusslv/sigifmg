@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
@@ -34,6 +35,17 @@ class UserController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $user = new User();
+        return view('user.create', compact('user'));
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -41,7 +53,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users']
+        ]);
+
+        // $user = new User($request->all());
+        // $user->save();
+
+        // return view('user.index');
     }
 
     /**
@@ -53,27 +73,26 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return response()->json($user);
+        return view('user.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
-        // $this->validate($request,[
-        //     'titulo' => 'required'
-        // ]);
-
+        $this->validate($request, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255']
+        ]);
         $user = User::find($request->id);
         $user->fill($request->all());
         $user->save();
-        return response()->json([
-            "status" => true
-        ]);
+        return view('user.index');
     }
 
     /**
@@ -90,7 +109,6 @@ class UserController extends Controller
         } else {
             $user->update(['status'=> 1]);
         }
-        
         
         return response()->json([
             "status" => true
