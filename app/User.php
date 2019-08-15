@@ -9,8 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable;
-    // use HasRoles;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +20,7 @@ class User extends Authenticatable
         'name', 'email', 'password','status'
     ];
 
-    // protected $guard_name = 'admin';
+    protected $guard_name = 'web';
 
     /**
      * The attributes that should be hidden for arrays.

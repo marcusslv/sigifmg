@@ -19,7 +19,7 @@ Auth::routes();
 
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 
-Route::group(['middleware' => ['auth'], 'prefix'=> 'admin', 'as' =>'admin.'], function () {
+Route::group(['middleware' => 'role:admin', 'prefix'=> 'admin', 'as' =>'admin.'], function () {
     Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
         Route::get('/', ['as'           => 'index', 'uses'   => 'UserController@index']);
         Route::get('getData', ['as'     => 'getData', 'uses' => 'UserController@getData']);

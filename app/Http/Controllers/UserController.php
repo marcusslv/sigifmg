@@ -7,9 +7,13 @@ use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -31,6 +35,14 @@ class UserController extends Controller
                     'status' => $users->status,
                 ];
             })
+            ->addColumn('group', function ($users)
+            {
+                $roles = [];
+                foreach ($users->roles->all() as $role) {
+                    array_push($roles,$role->name);
+                }
+                return $roles;
+            })
             ->make(true);
     }
 
@@ -42,7 +54,8 @@ class UserController extends Controller
     public function create()
     {
         $user = new User();
-        return view('user.create', compact('user'));
+        $roles = Role::all();
+        return view('user.create', compact('user', 'roles'));
     }
 
     /**
@@ -55,13 +68,16 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users']
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'group' => ['required'],
         ]);
+        $request->password = Hash::make($request->password);
+        $user = new User($request->all());
+        $user->assignRole($request->group);
+        $user->save();
 
-        // $user = new User($request->all());
-        // $user->save();
-
-        // return view('user.index');
+        return view('user.index');
     }
 
     /**
@@ -73,7 +89,8 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        return view('user.edit', compact('user'));
+        $roles = Role::all();
+        return view('user.edit', compact('user', 'roles'));
     }
 
     /**
@@ -87,7 +104,8 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255']
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'group' => ['required'],
         ]);
         $user = User::find($request->id);
         $user->fill($request->all());

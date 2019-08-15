@@ -14,7 +14,7 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function test_user_esta_logado()
+    public function test_user_logado_acessa_esta_view()
     {
         $user = \factory('App\User')->create();
         $this->actingAs($user);
@@ -27,14 +27,14 @@ class UserTest extends TestCase
      *
      * @return void
      */
-    public function test_user_nao_esta_logado()
+    public function test_user_nao_logado_nao_acessa_esta_view()
     {
         $user = \factory('App\User')->create();
         $this->get(route('admin.user.index'))
             ->assertStatus(302);
     }
 
-    public function test_user_create()
+    public function test_user_acessa_page_create()
     {
         $user = \factory('App\User')->create();
         $this->actingAs($user);
@@ -42,7 +42,7 @@ class UserTest extends TestCase
             ->assertStatus(200);
     }
 
-    public function test_edit_user()
+    public function test_user_acessa_page_edit()
     {
         $user = \factory('App\User')->create();
         $this->actingAs($user);
